@@ -951,6 +951,16 @@ end
 -- kickstart.plugins.* examples
 -- ============================================================
 do
+  -- [[ ToggleTerm ]]
+  vim.pack.add { gh 'akinsho/toggleterm.nvim' }
+  require('toggleterm').setup {
+        -- Keybinding to open/close the terminal (e.g., Ctrl+\)
+        open_mapping = [[<c-\>]],
+        -- Apply this mapping in insert and terminal modes
+        insert_mappings = false,
+        terminal_mappings = true,
+  }
+
   -- The following comments only work if you have downloaded the kickstart repo, not just copy pasted the
   -- init.lua. If you want these files, they are in the repository, so you can just download them and
   -- place them in the correct locations.

@@ -951,16 +951,6 @@ end
 -- kickstart.plugins.* examples
 -- ============================================================
 do
-  -- [[ ToggleTerm ]]
-  vim.pack.add { gh 'akinsho/toggleterm.nvim' }
-  require('toggleterm').setup {
-        -- Keybinding to open/close the terminal (e.g., Ctrl+\)
-        open_mapping = [[<c-\>]],
-        -- Apply this mapping in insert and terminal modes
-        insert_mappings = false,
-        terminal_mappings = true,
-  }
-
   -- The following comments only work if you have downloaded the kickstart repo, not just copy pasted the
   -- init.lua. If you want these files, they are in the repository, so you can just download them and
   -- place them in the correct locations.
@@ -981,6 +971,43 @@ do
   --
   --  Uncomment the following line and add your plugins to `lua/custom/plugins/*.lua` to get going.
   -- require 'custom.plugins'
+end
+
+-- ============================================================
+-- SECTION 10: My custom plugins.
+-- ============================================================
+do
+  -- [[ ToggleTerm ]]
+  vim.pack.add { gh 'akinsho/toggleterm.nvim' }
+  require('toggleterm').setup {
+        -- Keybinding to open/close the terminal (e.g., Ctrl+\)
+        open_mapping = [[<c-\>]],
+        -- Apply this mapping in insert and terminal modes
+        insert_mappings = false,
+        terminal_mappings = true,
+  }
+  --
+  -- Adds custom function and mapping to open LazyGit in a floating window.
+  local Terminal = require('toggleterm.terminal').Terminal
+  local lazygit = Terminal:new {
+    cmd = 'lazygit',
+    dir = 'git_dir',
+    direction = 'float',
+    float_opts = {
+      border = 'double',
+    },
+    -- function to run on opening the terminal
+    on_open = function(term)
+      vim.cmd 'startinsert!'
+      vim.api.nvim_buf_set_keymap(term.bufnr, 'n', 'q', '<cmd>close<CR>', { noremap = true, silent = true })
+    end,
+    -- function to run on closing the terminal
+    on_close = function(term) vim.cmd 'startinsert!' end,
+  }
+
+  function _lazygit_toggle() lazygit:toggle() end
+
+  vim.api.nvim_set_keymap('n', '<leader>g', '<cmd>lua _lazygit_toggle()<CR>',{ noremap = true, silent = true, desc = 'Open Lazy[G]it' })
 end
 
 -- The line beneath this is called `modeline`. See `:help modeline`
